@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: DataBase Backup
+      shell: mysqldump --opt --single-transaction --all-databases > /root/undercloud-all-databases.sql 2>&1
+      register: output
+
+    - name: FileSystem Backup output
+      debug: var=output.stdout_lines
+
+    - name: FileSystem Backup
+      shell: >
+        sudo tar --xattrs --ignore-failed-read -cf \
+          UC-backup-`date +%F`.tar \
+          /root/undercloud-all-databases.sql \
+          /etc \
+          /var/log \
+          /root \
+          /var/lib/glance \
+          /var/lib/docker \
+          /var/lib/certmonger \
+          /var/lib/registry \
+          /srv/node \
+          /home/stack 2>&1
+      ignore_erros: True
+      register: output
+
+    - name: FileSystem Backup output
+      debug: var=output.stdout_lines
