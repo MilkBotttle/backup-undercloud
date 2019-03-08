@@ -2,6 +2,8 @@
 ## Version
 Pike
 # Run
+1. Clean garbage file in /root and /home/stack for faster backup
+2. Play
 ```
 ansible-playbook backup-undercloud/main.yaml
 ```
